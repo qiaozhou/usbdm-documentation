@@ -1,0 +1,218 @@
+/*!
+ \page driverPage USB Driver Installation
+
+To support the 64-bit version of Windows it has been necessary to update to using libusb1.0 drivers. For 
+consistency this is also done on Linux and the other windows platforms. As part of this process the 
+Vendor-ID/Product-ID (VID/PID) for the hardware (BDM) has been changed. This will allow the co-existence of
+ Freescale's OSBDM-JM60 hardware while using a new driver for USBDM. Formerly both these BDMs used the same
+  VID/PID and changes to the driver would not be possible without rendering the OSBDM-JM60 inoperable. \n\n
+<b>Note:</b> On Windows, libusb1.0 is a thin wrapper around the Microsoft winUSB low-level USB drivers.  Because
+of this you may see references to winusb in the following.\n
+<hr>
+ \section NoteOnFirmwareChange Note for upgrading from version 3.x to 4.x USBDM firmware
+ 
+This change is complicated by the existence of a Bootloader in the BDM firmware.  If not replaced this
+loader will continue to use the original VID/PID.  Because of this, it is desirable to completely replace the
+BDM firmware. \n\n
+For JS16 based BDMs this is a simple process since the Freescale JS12 Bootloader software may be 
+used to replace all the firmware.  See \ref installationPage. \n\n
+For JMxx based BDMs it is necessary to use a HCS08 programmer to re-program the entire device so that the 
+Bootloader is updated when the rest of firmware is changed. If a programmer is not available then it is still
+possible to update the BDM firmware <i>using the Bootloader</i> but the Bootloader will remain unchanged.  
+To do this it will be necessary to install the drivers twice - once for the old VID/PID used by the Bootloader
+and again for the new VID/PID used by the main firmware.  Doing so will render any OSBDM drivers inoperable 
+on that USB port.
+
+<hr> 
+\section InstallingDriversSectionLinux Installation of USBDM USB drivers for Linux
+There isn't any.  The installation script provided will modify the /etc/udev/rules.d file to allow
+access to the USBDM device. The required driver for USBDM BDM interface (LibusbV1) is included in the standard
+Linux (at least Ubuntu current version).  The CDC (serial port) is a standard device and should also be installed
+without any extra steps.
+
+If more installation is required on your version you will have to investigate this yourself.  I'm not a Linux 
+expert and I don't have access to other versions for testing.  If you find other steps are necessary then please
+ advise and I will try to update the installation accordingly.
+
+<hr> 
+\section InstallingDriversSectionWindows Installation of USBDM USB drivers for Windows
+  
+This driver allows the USBDM software to communicate with the USBDM cable. You would usually only need to install these 
+driver files once.  If you subsequently plug the USBDM cable into another USB port of the same computer 
+the driver will be installed for that port automatically. \n\n
+
+<b>The required drivers are copied to the installation location as part of the installation process.  The driver folder 
+may be opened from the window's Start Menu.</b>
+ 
+Setting up the drivers differs somewhat between the different versions of windows.  In versions before Windows 7
+you will be automatically prompted to install the drivers using a <b>Found New Hardware Wizard</b> when you 
+first plug in the USBDM.  For Windows 7 the installation will quietly fail and it is necessary to manually
+trigger the wizard.    
+
+<b> Prior to Windows 7 the following sequence should occur: </b>
+
+ - 1. Plug in the USBDM.\n
+ - 2. The <b>Found New Hardware Wizard</b> should appear.  Select the <i>Install from a list or a specific location</i>
+   option. \n
+   Select <b>Next</b> to continue. \n
+   \image html FoundNewHardware1.png
+   \n
+ - 3. Select the options as shown and navigate to the driver directory.  <b>"C:\Program Files\pgo\USBDM 4.7.0\USBDM_Drivers"</b>. \n
+   Select <b>Next</b> to continue. \n
+   \image html FoundNewHardware2.png 
+   \n
+ - 4. The next step may take a while but you should eventually be presented with last dialogue shown. \n
+   Select <b>Finish</b> to close the dialogue. \n
+   \image html FoundNewHardware3.png 
+   \n
+
+The above sequence may be necessary a second time if you are installing a USBDM supporting a serial port connection.  
+The serial port appears as a second device.
+
+<b> With Windows 7 the following sequence should occur:</b>
+
+ - 1. Plug in the USBDM.\n
+ - 2. A small pop-up alert indicates windows is searching for the drivers.
+   \image html DriverSoftwareInstall1.png
+ - 3. Eventually this will be unsuccessful
+   \image html DriverSoftwareInstall2.png
+ - 4. You can click on the pop-up to view the result.  The CDC Interface is not present on all USBDMs.
+   \image html DriverSoftwareInstall3.png
+ - 5. To properly install the drivers it is necessary to open the Computer Properties ...  
+   \image html OpenComputerProperties.png
+ - 6. ...and then the Device manager.
+   \image html OpenDeviceManager.png
+ - 7. Locate the USBDM device(s), right-click and select <b>Update Driver Software...</b> from the menu.
+   \image html DeviceManager1.png
+ - 8. Select the second option as we need to specify where to find the drivers.
+   \image html UpdateDriverSoftware1.png
+ - 9. Browse to the driver directory <b>"C:\Program Files\pgo\USBDM 4.7.0\USBDM_Drivers"</b>.  Make sure <i>Include subfolders</i> is selected.
+   \image html UpdateDriverSoftware2.png
+ - 10. The driver is signed but the driver inf files aren't.  This results in a Windows Security dialogue.
+   It is necessary to confirm the installation. 
+   \image html UpdateDriverSoftware3.png
+ - 11.  Eventually the installation should complete successfully.
+   \image html UpdateDriverSoftware4.png
+ - 12.  You can confirm the USBDM device in the device manager.
+   \image html DeviceManager2.png
+ - 13. Repeat this process with the USBDM CDC Device (Serial port) if present.
+   \image html DeviceManager3.png
+ - 14. You can confirm the USBDM serial port in the device manager.  The serial port number assigned is unique to the BDM 
+   <b>providing it has a unique serial number</b>.  This allows multiple USBDMs to be present at the one time. \n
+   After installation of the serial port you may examine or change the communication properties. 
+   Right-click on the USBDM Serial Port and select Properties. 
+   \image html DeviceManager4.png
+ - 15.  The usual communication properties appear.  The USBDM serial port is limited in what baud rate and options are supported.
+    (I will eventually tell you what ones here when I get a chance to check :)
+    Advanced options are available.  Click on <b>Advanced...</b>
+   \image html SerialPortProperties1.png
+ - 16. One option worth noting is that you may also re-assign the COM port number used.
+   \image html SerialPortProperties2.png
+
+
+<hr> 
+\section InstallingDriversSectionWindowsAlt Alternative Driver Installation Method for Windows
+
+Alternatively, zadig may be used to install the libusbV1 drivers for the BDM interface (not the Serial port).
+http://www.libusb.org/wiki/libwdi/zadig \n\n
+
+<b>Preliminary</b> \n
+   - Download the current version of the required driver installation program from 
+   @htmlonly <a href="http://libusb.org/wiki/windows_backend#DriverInstallation">Windows Backend - libusb</a> @endhtmlonly 
+   or using the direct link (at this time) 
+   @htmlonly <a href="http://libusb-winusb-wip.googlecode.com/files/zadig.exe">zadig.exe</a>. @endhtmlonly \n
+   - Plug in the programmed BDM.
+   - Cancel any dialogues prompting to install the device drivers. \n
+   - Under Windows 7 the automatic driver installation will proceed and fail.  \n \n
+
+This following process will install the correct libusb 1.0 driver. 
+ 
+ - 1.  Run the <b>zadig_XXX.exe</b> program. \n\n
+       \image html Driver1.png
+ 
+ - 2.  Select the BDM from the list of devices.  Under Windows Vista and Windows 7 the device description will be
+       <b>USBDM BDM Interface</b>. Under Windows XP it may simply appear as <b>USB Device</b>.  
+       - Check carefully that the Vendor ID and Product ID are <b>16D0</b> and <b>0567</b> respectively. There may also be a
+       third number if the USBDM has a serial interface.  This should be zero(0) if present.  
+       - If the description is anonymous click on the Edit Desc. checkbox and change it to something more meaningful.
+       - Check that the WinUSB driver is the <b>Target</b>.\n  \n
+        \image html Driver2.png
+ 
+ - 3.  Click the <b>Install Driver</b> button.  This will install the driver files.  You may see a number of
+       dialogues.
+   <table border="0">
+      <tr>
+      <td> \image html Driver3a.png Select <b>Yes</b> to replace any existing driver</td>
+      <td> \image html Driver3b.png This may take a while!</td>
+      </tr>
+      <tr>
+      <td> \image html Driver3c.png Note if successful and then <b>Close</b></td>
+      <td> \image html Driver3d.png Select <b>Yes</b> to refresh the list of devices.</td>
+      </tr>
+   </table>
+      
+ - 4.  If you now plug in an updated BDM to another USB port the <b>Found New Hardware</b> wizard should automatically appear.  If prompted 
+       accept the recommended options to install the driver. Under Windows-7 there may be a prompt to accept an unsigned driver. \n\n
+       \image html UpdateDriverSoftware3.png
+ 
+ - 5.	 The <b>Found New Hardware</b> wizard should now complete.  Just click <b>Finish</b> to
+       close the dialogue. \n\n
+
+<hr> 
+ \section InstallingOldDriversSection Installation of USBDM USB drivers for old VID/PID
+
+This process should only be done if you need to use the USBDM Bootloader to update an old JMxx based BDM when you do not 
+have access to a HCS08 programmer.  
+\n\n
+
+<b>Preliminary</b> \n
+- Plug in the old BDM before proceeding.  \n
+- Do not move the BDM to another port before updating the firmware as the driver installation will apply only to that port. 
+- If the BDM has already been updated once, then it may be necessary to use the setboot.exe utility to place the BDM in ICP mode
+  before installing the driver. 
+\n
+
+<b>Procedure:</b> \n
+ - 1.  Run the <b>zadig_XXX.exe</b> program. \n\n 
+       \image html DriverOld1.png
+ 
+ - 2.  Choose <b>Options->List All Devices</b> from the menu so that all devices are available for installation. \n
+       \image html DriverOld2.png
+ 
+ - 3.  Select the BDM from the list of devices.  The description of the device will depend upon which device driver has been
+       previously used.  In either case check carefully that the Vendor ID and Product ID are <b>15A2</b> and <b>0021</b> respectively.
+       Click on the Edit Desc. checkbox and change the description to something more meaningful.  This will make the device easier to
+       identify in the future.  
+       \image html DriverOld3.png
+       \image html DriverOld4.png
+ 
+ - 4.  Make sure that <b>WinUSB</b> is selected as the <i>Target Driver</i>\n
+       Click the <b>Install Driver</b> button.  This will install the driver for the selected device.  You may see a number of dialogues 
+       as shown above.
+       
+ - The device should now be using the new driver and the USBDM Bootloader program may be used to update the firmware.
+ - If desired, a similar process may be used to restore the original libusb driver if it is needed for other devices.
+   Just select the correct <i>Target Driver</i>.
+ 
+<hr>
+ \section LinuxDrivers Linux Drivers
+ The shell scripts supplied with the linux version should install the required information for the libusb drivers to work on a linux machine.
+ 
+ You will also need to make sure you have installed some libraries:
+   (Some information posted by joncas on Freescale Forums - thanks)
+  \verbatim
+  Hello PGO,
+  
+  I just tried your version 4.6 with Codewarrior 10.1 on a clean install of Ubuntu 11.04 (32 bit).
+  In case it helps anyone else trying this, it required adding the following libraries with the Synaptic Package Manager:
+    - tcl8.5 
+    - libwxgtk2.8-0 
+    - lbwxgtk2.8-dbg 
+    - libstdc++5 
+    - libxerces-c3.1
+  Then it seems to run fine.
+  Many thanks and best regards!
+   
+  Robert
+  \endverbatim
+*/
