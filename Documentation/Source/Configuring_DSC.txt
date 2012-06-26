@@ -58,6 +58,16 @@
          - <b>MC56F80xx</b> \n
             This target uses the JTAG connection but currently the speed option is ignored.
 
+  <b>Don't show this dialogue in future</b>
+      - This suppresses the display of the dialogue when connecting to the target.  This is useful if you have
+        a simple BDM without target voltage control and you find the default (or once modified) options to be 
+        adequate.\n
+        Display of the dialogue can be restored by the following methods:\n
+        - Try debugging without the BDM connected.  An error dialogue with three options should appear. One of these options
+          being to "Change Settings".  This will open the dialogue.\n
+        - Delete the programmer configuration file <b>%%APPDATA%%/usbdm/usbdm_HC12.cfg</b> (or similar for other targets).  
+          This will restore the default settings including the dialogue display.\n\n
+
  \section PopupDialogues Popups
    <table border="0">
    <tr>

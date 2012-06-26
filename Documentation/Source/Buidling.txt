@@ -3,7 +3,6 @@
 
  \section introSection Introduction
    The source directory contains various archives of parts of the project:
-   - 
    
  \section C Source folder
    This contains the sources for the software (above DLLs and JM60 code).

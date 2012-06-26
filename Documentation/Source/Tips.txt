@@ -47,7 +47,7 @@
    
 \section TestingTheBDMHardwareSection Testing the BDM hardware
       
-   There is TCL command interpreter supplied with the later version of usbdm.  In V4.7 & 4.8 this is available in the start menu as <b>USBDM TCL Interpreter</b>. \n
+   There is TCL command interpreter supplied with the later version of usbdm.  In V4.7 onwards this is available in the start menu as <b>USBDM TCL Interpreter</b>. \n
    Type ? to get a list of commands.\n\n
    
    You can do a basic output pin static test with the following commands:

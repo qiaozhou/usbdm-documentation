@@ -1,21 +1,26 @@
 /*!    
  \page installationPage Installation & Initial Programming of BDM Firmware
 
- \section sectionInitialnstruction Initial Construction and Installation.
-   -  Build the hardware using the information provided in the <b>PCB</b> folder.  
-   
-   -  Install the modified driver files.\n
-      Copy the files to the appropriate <b>Codewarrior</b> directories. A command file <b>Install Codewarrior Files.cmd</b> is provided to do this.  
-      <b>Carefully check</b> this command file before executing it.  It may be necessary to modify paths depending upon which version of Codewarrior
-      you have installed or if non-standard installation paths were used. \n
-      This command file must be executed with administrator priviledges on Vista. (Right-click and choose Run as Administrator)      
-      - The command file copies the following files\n
-         <b>opensourcebdm.dll</b> -> \n
-         "C:\Program Files\Freescale\CodeWarrior for Microcontrollers V6.2\Prog\gdi" \n
-         <b>tbdml.dll</b> -> \n
-         "C:\Program Files\Freescale\CodeWarrior for S12(X) V5.0\Prog\gdi" \n
-      - <b>Do not delete any existing DLL files</b> for example the .gdi files.  See the discussion in the "What is Provided" section for more details.
+ \section installationSection Installation of Programmers, Codewarrior Legacy and V10 (Eclipse version) interfaces
 
+   - To use USBDM with the various versions of Codewarrior it is necessary to copy files to various locations.  
+     Under Windows a standard installer program is provided. As well as installing the various programmers it also modifies any
+     existing Codewarrior installations to work with a USBDM BDM interface.  This installer only works with the following versions of Codewarrior:\n
+     - CodeWarrior for Coldfire V7.2
+     - CodeWarrior for DSC56800E V8.3
+     - CodeWarrior Development Studio for S12(X) V5.1
+     - CW for MCU v10.1 and/or MCU v10.2
+     - CodeWarrior Development Studio for Microcontrollers V6.3\n
+     
+     <b>Note : </b> It may be necessary to re-install the USBDM software if Codewarrior is updated or re-installed as USBDM modified files may be replaced. \n
+
+ \section sectionInitialnstruction Initial Construction and Installation.
+   -  Build the hardware using the information provided in the <b>PCB</b> folder.
+   -  The following are provided:
+      - PDFs including the circuit diagrams with parts lists and example PCB layouts.
+      - PCB layouts in Altium designer format (a trial version of the software may be down loaded from http://altium.com/evaluate/). 
+      - PCB layouts exported from Altium designer as Gerber files and NC drill files.
+      
  \section sectionInitialProgramming Initial programming of USBDM into a blank device or a device containing an incompatible program.
 
  Refer to the following document for detailed information on how the JB16 is programmed using the Freescale ICP software 
@@ -65,5 +70,5 @@
    -  Use the Freescale ICP programming software to erase the entire Flash memory.
       It will be necessary to use the MASS erase configuration for this (\b Initial_Programming_MassErase.imp) so that the 
       ICP code is removed as well as it is only usable with the USBDM code.
-   -  You may now restore your original Flash code and delete the two dll's installed above.
+   -  You may now restore your original Flash code and uninstall the USBDM software.
   */
