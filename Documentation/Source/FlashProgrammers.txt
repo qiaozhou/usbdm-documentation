@@ -301,6 +301,8 @@
          - Programming firmware updated.
          - MC56F83xx family extended but untested and limited device entries have been created.  It may be possible to
            add other devices.
+      - Added device entries for MM912H634 etc.
+      - Programmer dialogue size reduced.
       - Bug fixes
          - Added/corrected entries for several HCS12 devices
          - Improved DSC communication routines to work with a wider range of devices.
@@ -369,6 +371,7 @@
    - MC13213 \n
    - MC9S12A64, -C32, -C128, -DP256B, -DG128, -DT256, -HY64, -NE64, -P128, -XEP100, -XD256, -XDT512, -XS128,\n
                 -UF32(check hardware errata on this chip!) 
+   - MM912H634, MM912G634
    - MCF51AC256, -CN128, -EM256, -JM128, -QE96,  \n
    - MCF52233, MCF52210 and some other ones that I can't recall at the moment.  These are all V2 chips - I don't have any V3/4 to test with.
    - MC56F8006, MC56F8013, MC56F8014, MC56F8023, MC56F8245, MC56F8323, 
