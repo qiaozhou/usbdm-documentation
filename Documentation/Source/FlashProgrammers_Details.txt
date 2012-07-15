@@ -7,8 +7,8 @@ The various targets provide security by programming a <b>Security Region</b> of 
 values that enable or disable security features on the device.  The Flash contents of a secured device are 
 inaccessible and only limited access to the chip is possible using the debug interface. 
       
-The target devices provide some mechanism for being unsecured.  In general this involves totally erasing the device as
-a side effect to maintain the privacy of the original programmed information.  The USBDM programmers refer to this as 
+The target devices provide some mechanism for being unsecured.  For security reasons, this involves totally erasing the device 
+ to maintain the privacy of the originally programmed information.  The USBDM programmers refer to this as 
 <b>mass erasing</b> and it is one of the options provided for erasing the device before programming.
 
 The mass erase details vary from chip to chip and are summarised below:
@@ -37,20 +37,23 @@ The mass erase details vary from chip to chip and are summarised below:
      necessary to re-program the security area to a non-0xFF value and reset the device.
      The programmer carries out the above operations when needed (for a secured device) and then uses a sector erase to restore
      the security area to a blank (secured) state but without a further reset.  This leaves the device blank but temporarily 
-     unsecured.  
+     unsecured.  \n
      NOTE: Programming a memory image that does not contain values for the security region to a blank device will leave the 
      device <b>secured</b>.    
 
    - <b>Coldfire V1+, Kinetis</b> \n
      The device provides an unsecure operation.  This erases the flash to 0xFF and then re-programs the security region to an
      unsecured state.  The device is unsecured but <b>not blank</b>.\n
+     The non-blank security area may conflict with programming a new security value to the device.  To prevent this problem
+     the programmer does a selective erase of the security area after the mass erase.  This leaves the device
+     <b>blank</b> and it will be become secured if reset in this state.  The programmer does not reset the device until it has 
+     finished programming so this is not an issue. \n
      It is also possible to permanently secure these devices by choosing particular security options to be programmed in the 
      security region.  Such a device cannot be erased or re-programmed ever.\n
      The programmer does not allow programming of a device to permanently secure it in the above fashion.\n
      NOTE: Programming a memory image that does not contain values for the security region to a mass erased device will leave
-     the device <b>unsecured</b>.\n
-     NOTE: Programming a memory image that does contain values for the security region to a mass erased device will result in a 
-     non-blank programming error since it will conflict with the existing non-blank security values.    
+     the device <b>secured</b> due to the selective erase done following the mass erase.\n
+     NOTE: This outcome differs to that of previous versions of the programmer.    
      
    - <b>Coldfire V2,3,4, MC56F8xxx</b> \n
      These devices have a separate utility to unlock them so Mass erase is not available in the programmer.

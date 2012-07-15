@@ -277,125 +277,53 @@
    - Reset Release interval\n
       The length of time between releasing reset and releasing associated signals e.g. BKPT & BGND.
    - Power Off Duration\n
-      The length of time to wait after resetting the target before attempting any operation.
+      The length of time to wait after resetting the target before attempting any operation.\n\n
+
+   <b>FlexNVM Parameters</b>\n
+   Some Coldfire+ and Kinetis devices support emulated EEPROM.  This consists of a region of RAM and an associated
+   backing store of EEPROM.  The Flash controller transparently transfers data to-and-fro between the FlexRAM and 
+   the EEPROM backing store to provide emulation of a small-sector changeable EEPROM.  The Flash controller uses a wear 
+   levelling mechanism to produce an emulated EEPROM with reasonable lifetime that is considerably longer that could 
+   be simply achieved using the large-sector (~1K) EEPROM available in these chips.\n\n
+   These controls allow the programming and initialisation of the EEEPROM in the target.  The EEPROM created would then
+   be used by a target program to preserve changing but persistent data.  It is intended that this configuration would be 
+   only done once over a device lifetime as changing this configuration would probably invalidate the wear-levelling information
+   maintained in the device.  Changes during system development would not be an issue as the number of EEEPROM writes would be
+   unlikely to be a significant portion of those of a deployed system.    
+   - EEEPROM Size\n
+      This determines the size of the Emulated EEPROM located in the FlexRAM.\n
+      Selecting <b>Unchanged/None</b> with the mass erase programming option will disable the EEPROM.\n
+      Use with any other programming option e.g. Selective erase will leave the EEPROM setting of the device unchanged.\n
+      The latter is a useful combination that allows the general flash to be erased and re-programmed without affecting the EEEPROM data.
+   - FlexNVM Partition\n
+      This controls how much of the FlexNVM region is devoted to the EEPROM emulation.  The remaining area may be used
+      as conventional flash.  \n
+      The ratio between the backing EEPROM size and the EEEPROM size greatly affects the effective lifetime of the EEEPROM.   
+   - Estimated EEEPROM lifetime.\n
+      This provides an estimate of the lifetime of the EEEPROM i.e. the expected number of 16/32-bit write cycles to the EEEPROM 
+      before the reliability degrades too much.  Please refer to the target data sheets & reference manuals for details of how 
+      this was calculated.  \n
+      Note that the use of 8-bit writes to the EEEPROM will halve the effective lifetime.\n  
    </td>
    <td>
    \image html "AdvancedTab.png"
    </td>
    </tr>
+   <tr>
+   <td colspan="2">
+   Note: The programmer supports programming of the region of FlexNVM used as conventional Flash.  It cannot program the
+   emulated EEPROM.\n\n
+   Note: The programmer can only program this setting if the associated Flash IFR region is blank (unprogrammed).  The only
+   mechanism for erasing the IFR is a device mass-erase.  Unless you know the device is unprogrammed, it is usual to use this
+   setting with the mass-erase option.
+   </td>
+   </tr>   
    </table>
-
-\section sectionMaintenance Limitations & Maintenance
-   - The devices supported are limited to those that I've had a chance to investigate.  The configuration for particular
-     devices are contained in the various \b xxxx_devices.xml files.  This may be modified by hand to include other devices if
-     they are similar to those already supported i.e. have a supported clock type and the usual type of Flash memory.\n
-   - EEPROM (HCS12) and dual-flash (CFV1) are supported but not extensively tested.
-   - The programmer \b requires the use of USBDM Ver 4.9 or later BDMs with <b>matching firmware</b>.  It should be possible to
-     adapt the software to the OSBDM API relatively easily.
-   - Note that Coldfire+ & Kinetis devices are limited to basic flash programming. 
-       
-\section sectionHistory Revision History
-   -  V4.9.5 (June 2012) -
-      - Added Support for ELF file format (only tested with Kinetis) 
-      - DSC programmer extended
-         - Programming firmware updated.
-         - MC56F83xx family extended but untested and limited device entries have been created.  It may be possible to
-           add other devices.
-      - Added device entries for MM912H634 etc.
-      - Programmer dialogue size reduced.
-      - Bug fixes
-         - Added/corrected entries for several HCS12 devices
-         - Improved DSC communication routines to work with a wider range of devices.
-   -  V4.9.4 (April 2012) -
-      - Added Load and Go.
-      - Added check for disk file change and Auto Reload option.
-      - Added Smart security option.
-      - Deleted Prompt to cycle power option - This was being ignored in most cases anyway :)
-      - Added Advanced option page etc.
-      - Added several command line options corresponding to above.
-   -  V4.9.3 (March 2012) -
-      - Added -execute option
-   -  V4.9 (February 2012) -
-      - Extensive changes to HCS12 programmer
-      - Added programming algorithms for several HCS12 devices (HY,HA,XE,XS,P).
-   -  V4.8 (December 2011) -
-      - General update of how the programming algorithms are controlled.  \n
-        They are much more configurable by the external XML and TCL files.  This allows for some customisation of the
-        memory map on HCS12 devices or custom startup operations.  
-      - Added Coldfire+ devices & algorithms.
-      - Erase options extended (on some targets).
-      - Re-testing of all devices (see list below) where complete memory images including paging were used.
-      - Bug fixes on HCS08 programming.  Unsure were these were introduced but (hopefully) now squashed.
-      - Paging of Flash and EEPROM has been updated for HCS12 and HCS08 devices.  
-      - The memory image descriptions are now more detailed and are more carefully enforced when programming.  Attempting
-        to program non-existent memory is now reported before programming is attempted.  This should result in more 
-        meaningful error messages.
-      - msi install updated for Codewarrior 10.2
-      - Testing with Codewarrior 10.2 Beta
-   -  V4.7 (October 2011) -
-      - BDM interface speed control implemented for CFVx devices
-      - Windows Installer
-      - Updates for Eclipse Kinetis device name changes
-      - Bug fixes
-         - Devices incorrectly identified as secured
-         - Corrections to CFVx connection sequences
-   -  V4.6 (June 2011) -
-      - Support for Kinetis and limited ARM Targets
-      - Improvements to USB error checking (JMxx/JS16 only)
-   -  V4.5 (February 2011) 
-      - Added devices
-      - Added EEPROM support
-      - Added Dual-flash support
-      - Restored command line operation
-      - Flash image now dynamically allocated so no (realistic) size limitation  
-   -  V4.0 (September 2010) 
-      - This version has various restrictions.  In particular command line operation is not available.
-      - Added HCS12 version - limited target support.
-   -  V3.2 (May 2010) 
-   -  V2.0 (Feb 2010) 
-      - Added support for paged memory (-AC128, -DZ128 etc)
-      - Changed trim algorithm to use linear curve fitting.
-      - FTRIM now combined with existing image value if present.
-      - Changed console handling on command line version.
-      - Fixed "Image" security option modifying flash image. This could prevent programming the clock trim value by itself.
-      - The calculated trim value is now available on the dialogue for use when debugging with a particular chip.
-   -  V1.0 (Dec 2009) 
-      - Initial release.
-
- \section sectionTesting Testing
-   The drivers and programmers have been tested with the following devices (basic programming, debugging and clock trim where applicable):\n
-   
-   - RS08KA1, -KA2, -KA8, -LA8, -LE4 
-   - MC9S08AC60 -AC128, -DN16, -DZ128, -EL16, -FL16, -GB60A, -GT16A, -GT32, -JM16, -JM60, -JS16, -LG32, -LL64, \n
-                -LM26, -QA4, -QB8, -QD4, -QE8, -QE16, -QE128, -QG8, -RD16, -SE8, -SF4, -SG8, -SH8, -SV16, \n
-   - MC13213 \n
-   - MC9S12A64, -C32, -C128, -DP256B, -DG128, -DT256, -HY64, -NE64, -P128, -XEP100, -XD256, -XDT512, -XS128,\n
-                -UF32(check hardware errata on this chip!) 
-   - MM912H634, MM912G634
-   - MCF51AC256, -CN128, -EM256, -JM128, -QE96,  \n
-   - MCF52233, MCF52210 and some other ones that I can't recall at the moment.  These are all V2 chips - I don't have any V3/4 to test with.
-   - MC56F8006, MC56F8013, MC56F8014, MC56F8023, MC56F8245, MC56F8323, 
-   - Kinetis K40X256, K60X256
-   - Complete systems - Axiom MC56F8006 Demo board, TWR-K40, TWR-K60, TWR-CFV1 and TWR-RS08/HCS08. \n
-   
-   Please advise of any problems. 
-
- \section sectionQueries Queries
-   Any queries please post on the Freescale 
-   @htmlonly <a href="http://forums.freescale.com/freescale/board?board.id=OSBDM08">OSBDM Discussion Board</a>. @endhtmlonly \n
-
- \section sectionReferences References
-   -  Doxygen Documentation tool - http://www.stack.nl/~dimitri/doxygen/index.html
-   -  OSBDM - http://forums.freescale.com/freescale/board?board.id=OSBDM08
-   -  Tool Command Language (TCL) http://www.tcl.tk/
-   -  Ultimate Packer for eXecutables (UPX) has been used to pack DLLs and EXEs - http://upx.sourceforge.net/ 
-   -  WxWidgets Cross Platform Library has been used for the GUI - http://www.wxwidgets.org/
-   -  Xerces XML parser http://xerces.apache.org/xerces-c/
 
  \section licenseSection License
    \verbatim
 
-   USBDM Flash programmer
+   USBDM Flash programmer & Utilties
    Copyright (C) 2009-11  Peter O'Donoghue
 
    This program is free software; you can redistribute it and/or modify
